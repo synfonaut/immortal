@@ -1,3 +1,4 @@
+// wave particles - https://codepen.io/deathfang/pen/WxNVoq
 
 var mouseX = 85, mouseY = -342;
 
@@ -125,7 +126,7 @@ function renderDots() {
 }
 
 
-// text particle
+// text particle - https://codepen.io/anon/pen/PgGKJG
 //
 //
 
