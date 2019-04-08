@@ -1,5 +1,4 @@
 # todo
-- analytics
 - want url on picture
 - advertise immortalsv.com
 
