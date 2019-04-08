@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "@sindresorhus/slugify": "^0.9.1",
+    "express": "^4.16.4",
     "puppeteer": "^1.14.0"
   }
 }
