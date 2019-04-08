@@ -167,12 +167,15 @@ $(function() {
     init();
     animate();
 
-    $(".call-to-action").click(function() {
+    $("#submit").submit(function(e) {
+
+        e.preventDefault();
 
         var submittedUrl = $("#url").val();
 
         if (!submittedUrl) {
-            alert("Enter a valid URL you want to snapshot to send to the blockchain");
+            $("#error").html("Enter a valid URL you want to snapshot to send to the blockchain").css("display", "block");
+            console.log("SUP");
             return;
         }
 
@@ -192,8 +195,8 @@ $(function() {
         $("#screenshot img").attr("src", "");
         $("#screenshot").addClass("loading");
         $("#screenshot #confirm").css("display", "none");
-        $("#screenshot #success").css("display", "none");
-        $("#screenshot #error").css("display", "none");
+        $("#success").css("display", "none");
+        $("#error").css("display", "none");
 
         $.ajax({
             method: "POST",
@@ -224,7 +227,7 @@ $(function() {
                         ],
                         button: {
                             $el: "#money-button",
-                            label: "Save",
+                            label: "Immortalize",
                             $pay: {
                                 to: [{
                                     address: tip_address,
@@ -239,7 +242,7 @@ $(function() {
 
                                 var viewURL = "https://bico.media/" + msg.txid;
 
-                                $("#screenshot #success").html("Successfully immortalized " + submittedUrl + " to Bitcoin (BSV), see it <a href='" + viewURL+ "'>here</a>").css("display", "block");
+                                $("#success").html("Successfully immortalized " + submittedUrl + " to Bitcoin (BSV), see it <a href='" + viewURL+ "'>here</a>").css("display", "block");
                             }
                         }
                     });
@@ -247,7 +250,7 @@ $(function() {
 
                 oReq.send();
             } else {
-                $("#screenshot #error").html("Error while fetching website, please try again or contact synfonaut").css("display", "block");
+                $("#error").html("Error while fetching website, please try again or contact synfonaut").css("display", "block");
             }
 
         });

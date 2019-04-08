@@ -1,5 +1,4 @@
 # todo
-- can't submit form with enter
 - past page fold don't look good
 - about
 - analytics
