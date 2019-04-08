@@ -61,20 +61,7 @@ function init() {
     //document.addEventListener('mousemove', onDocumentMouseMove, false);
     //document.addEventListener('touchstart', onDocumentTouchStart, false);
     //document.addEventListener('touchmove', onDocumentTouchMove, false);
-
-    //
-
-    window.addEventListener('resize', onWindowResize, false);
-}
-
-function onWindowResize() {
-    windowHalfX = window.innerWidth / 2;
-    windowHalfY = window.innerHeight / 2;
-
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    //window.addEventListener('resize', onWindowResize, false);
 }
 
 //
@@ -134,14 +121,21 @@ function renderDots() {
 
 canvas = document.getElementById("text-canvas");
 var ctx = canvas.getContext('2d');
-W = canvas.width = window.innerWidth / 4;
-H = canvas.height = window.innerHeight / 4;
+W = canvas.width;
+H = canvas.height;
 
 gridX = 5;
 gridY = 5;
 
 colors = [
-    "#00D6DA", "#00BFF0", "#CCEDFC", "#99DAF8",
+//    "#00D6DA", "#00BFF0", "#CCEDFC", "#99DAF8",
+//    "#00D6DA", "#00BFF0", "#CCEDFC", "#99DAF8",
+"#00A3EE", "#00BFF0", "#00D6DA",
+"#40BAF2", "#80D1F7", "#BFE8FB",
+
+"#40CFF4", "#80DFF8", "#BFEFFB",
+
+"#40E0E3", "#80EBED", "#BFF5F6",
 ];
 
 fieldvalue = "BSV";
@@ -176,11 +170,13 @@ $(function() {
     animate();
 
     $(".call-to-action").click(function() {
-        mouseX = Math.random() * 1000;
-        mouseY = Math.random() * 1000;
-
         resolution = 15;
         speed = 4;
+
+        setTimeout(function() {
+            mouseX = Math.random() * 1000;
+            mouseY = Math.random() * 1000;
+        }, 500);
 
     });
 });

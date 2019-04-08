@@ -3,6 +3,7 @@
 - build moneybutton integration
 - build frontend UX process
 - bistagram integration?
+- canvas wrongly resizes with window
 
 ## colors
 
