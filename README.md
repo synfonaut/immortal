@@ -1,6 +1,4 @@
 # todo
-- past page fold don't look good
-- about
 - analytics
 - want url on picture
 - advertise immortalsv.com
