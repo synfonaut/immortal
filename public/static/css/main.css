@@ -223,3 +223,21 @@ a.inner-link:hover {
 #money-button {
     width: 165px !important;
 }
+
+.alert-success {
+    background-color: #00BFF0ee;
+    border-color: #00BFF0dd;
+    color: white;
+    display: none;
+    margin-top: 7px;
+}
+.alert-success a {
+    color: white;
+}
+
+.alert-danger {
+    background-color: #A1F489;
+    border-color: #A1F489;
+    color: #333333cc;
+    display: none;
+}

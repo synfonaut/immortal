@@ -161,7 +161,7 @@ function renderText() {
 
 
 const tip_address = "16srSTytNdk11V8xBKYuJQFZKGThzN4GzU";
-const bitcom_protocol = "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut";
+const bitcom_protocol = "testing-19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut";
 
 $(function() {
     init();
@@ -187,10 +187,12 @@ $(function() {
         $("#screenshot img").attr("src", "");
         $("#screenshot").addClass("loading");
         $("#screenshot #confirm").css("display", "none");
+        $("#screenshot #success").css("display", "none");
+        $("#screenshot #error").css("display", "none");
 
         $.ajax({
             method: "POST",
-            url: "https://immortalsv.com/scrape",
+            url: "/scrape",
             contentType: "application/json",
             data: JSON.stringify({ url: submittedUrl }),
         }).done(function( msg ) {
@@ -217,7 +219,7 @@ $(function() {
                         ],
                         button: {
                             $el: "#money-button",
-                            label: "Immortalize",
+                            label: "Save",
                             $pay: {
                                 to: [{
                                     address: tip_address,
@@ -229,13 +231,20 @@ $(function() {
                                 console.log("https://bico.media/" + msg.txid);
                                 console.log("https://www.bitpaste.app/tx/" + msg.txid);
                                 console.log("https://www.bitcoinfiles.org/" + msg.txid);
+
+                                var viewURL = "https://bico.media/" + msg.txid;
+
+                                $("#screenshot #success").html("Successfully immortalized " + submittedUrl + " to Bitcoin (BSV), see it <a href='" + viewURL+ "'>here</a>").css("display", "block");
                             }
                         }
                     });
                 };
 
                 oReq.send();
+            } else {
+                $("#screenshot #error").html("Error while fetching website, please try again or contact synfonaut").css("display", "block");
             }
+
         });
 
     });
