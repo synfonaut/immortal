@@ -1,18 +1,26 @@
 const express = require('express')
+
 const screenshot = require('./screenshot')
 
 const app = express()
 const port = 3000
 
-app.get('/scrape', async (req, res, next) => {
-    res.setHeader('Content-Type', 'application/json');
+app.use(express.json());       // to support JSON-encoded bodies
+app.use(express.urlencoded()); // to support URL-encoded bodies
 
-    const url = req.query.url;
+app.use(express.static('public'))
+
+app.post('/scrape', async (req, res, next) => {
+
+    const url = req.body.url;
+    console.log("Fetching screenshot for " + url);
+
     try {
         var screenshot_url = await screenshot.getScreenshotForURL(url);
         res.send({
             "status": "ok",
             "url": url,
+            "mimeType": "image/jpeg",
             "screenshot": screenshot_url,
         });
     } catch (e) {

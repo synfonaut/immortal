@@ -16,7 +16,7 @@ async function getScreenshotForURL(url) {
     await page.goto(url, {"waitUntil" : "networkidle0"});
     const fileName = slugify(url + "-" + (new Date().getTime())) + ".jpg";
     const uploadPath = "public/uploads/" + fileName;
-    const downloadPath = "http://localhost:8000/uploads/" + fileName;
+    const downloadPath = "http://localhost:3000/uploads/" + fileName;
     await page.screenshot({path: uploadPath, quality: 85});
 
     await browser.close();

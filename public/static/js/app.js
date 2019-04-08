@@ -128,13 +128,9 @@ gridX = 5;
 gridY = 5;
 
 colors = [
-//    "#00D6DA", "#00BFF0", "#CCEDFC", "#99DAF8",
-//    "#00D6DA", "#00BFF0", "#CCEDFC", "#99DAF8",
 "#00A3EE", "#00BFF0", "#00D6DA",
 "#40BAF2", "#80D1F7", "#BFE8FB",
-
 "#40CFF4", "#80DFF8", "#BFEFFB",
-
 "#40E0E3", "#80EBED", "#BFF5F6",
 ];
 
@@ -164,12 +160,22 @@ function renderText() {
 }
 
 
+const tip_address = "16srSTytNdk11V8xBKYuJQFZKGThzN4GzU";
+const bitcom_protocol = "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut";
 
 $(function() {
     init();
     animate();
 
     $(".call-to-action").click(function() {
+
+        const submittedUrl = $("#url").val();
+
+        if (!submittedUrl) {
+            alert("Enter a valid URL you want to snapshot to send to the blockchain");
+            return;
+        }
+
         resolution = 15;
         speed = 4;
 
@@ -178,5 +184,60 @@ $(function() {
             mouseY = Math.random() * 1000;
         }, 500);
 
+        $("#screenshot img").attr("src", "");
+        $("#screenshot").addClass("loading");
+        $("#screenshot #confirm").css("display", "none");
+
+        $.ajax({
+            method: "POST",
+            url: "http://localhost:3000/scrape",
+            contentType: "application/json",
+            data: JSON.stringify({ url: submittedUrl }),
+        }).done(function( msg ) {
+            $("#screenshot").removeClass("loading");
+            $("#screenshot #confirm").css("display", "block");
+
+            if (msg.status == "ok" && msg.screenshot) {
+                $("#screenshot img").attr("src", msg.screenshot);
+
+                var oReq = new XMLHttpRequest();
+                oReq.open("GET", msg.screenshot, true);
+                oReq.responseType = "arraybuffer";
+
+                oReq.onload = function(oEvent) {
+                    var blob = oReq.response;
+
+                    databutton.build({
+                        data: [
+                            bitcom_protocol,
+                            blob,
+                            msg.mimeType,
+                            "binary",
+                            submittedUrl,
+                        ],
+                        button: {
+                            $el: "#money-button",
+                            label: "Immortalize",
+                            $pay: {
+                                to: [{
+                                    address: tip_address,
+                                    value: 50000,
+                                }]
+                            },
+                            onPayment: function(msg) {
+                                console.log(msg);
+                                console.log("https://bico.media/" + msg.txid);
+                                console.log("https://www.bitpaste.app/tx/" + msg.txid);
+                                console.log("https://www.bitcoinfiles.org/" + msg.txid);
+                            }
+                        }
+                    });
+                };
+
+                oReq.send();
+            }
+        });
+
     });
 });
+

@@ -4,6 +4,7 @@
 - build frontend UX process
 - bistagram integration?
 - canvas wrongly resizes with window
+- can't submit form with enter
 
 ## colors
 
