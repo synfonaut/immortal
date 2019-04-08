@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@sindresorhus/slugify": "^0.9.1",
+    "puppeteer": "^1.14.0"
+  }
+}
