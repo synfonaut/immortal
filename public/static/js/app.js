@@ -169,11 +169,16 @@ $(function() {
 
     $(".call-to-action").click(function() {
 
-        const submittedUrl = $("#url").val();
+        var submittedUrl = $("#url").val();
 
         if (!submittedUrl) {
             alert("Enter a valid URL you want to snapshot to send to the blockchain");
             return;
+        }
+
+        if (submittedUrl.indexOf("http") != 0) {
+            submittedUrl = "http://" + submittedUrl;
+            $("#url").val(submittedUrl);
         }
 
         resolution = 15;
