@@ -190,7 +190,7 @@ $(function() {
 
         $.ajax({
             method: "POST",
-            url: "http://localhost:3000/scrape",
+            url: "https://immortalsv.com/scrape",
             contentType: "application/json",
             data: JSON.stringify({ url: submittedUrl }),
         }).done(function( msg ) {
