@@ -24,6 +24,7 @@ app.post('/scrape', async (req, res, next) => {
             "screenshot": screenshot_url,
         });
     } catch (e) {
+        console.log("ERROR: " + e);
         res.send({
             "status": "err",
         });
