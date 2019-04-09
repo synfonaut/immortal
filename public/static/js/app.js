@@ -169,6 +169,11 @@ $(function() {
     init();
     animate();
 
+    const params = new URLSearchParams(window.location.search);
+    if (params.has("url")) {
+        $("#url").val(params.get("url"));
+    }
+
     $("#submit").submit(function(e) {
 
         e.preventDefault();
@@ -189,6 +194,9 @@ $(function() {
             submittedUrl = submittedUrl.replace(/^https?\:\/\//, "");
             $("#url").val(submittedUrl);
         }
+
+        window.history.replaceState({}, 'ImmortalSV ' + submittedUrl, '/?url=' + submittedUrl);
+
 
         resolution = 15;
         speed = 4;

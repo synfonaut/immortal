@@ -32,4 +32,18 @@ app.post('/scrape', async (req, res, next) => {
     }
 })
 
+app.get('/*', function(req, res) {
+    const path = req.url;
+    if (path[0] == "/") {
+        const url = path.slice(1);
+
+        if (url.indexOf(".") != -1) {
+            res.redirect("/?url=" + url);
+            return;
+        }
+    }
+
+    res.status(404).send("not found");
+});
+
 app.listen(port, () => console.log(`immortal scraper listening on port ${port}!`))
