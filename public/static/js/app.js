@@ -171,7 +171,7 @@ $(function() {
 
         e.preventDefault();
 
-        var submittedUrl = $("#url").val();
+        var submittedUrl = $("#url").val().toLowerCase();
 
         if (!submittedUrl) {
             $("#error").html("Enter a valid URL you want to snapshot to send to the blockchain").css("display", "block");
@@ -180,6 +180,11 @@ $(function() {
 
         if (submittedUrl.indexOf("http") != 0) {
             submittedUrl = "http://" + submittedUrl;
+            $("#url").val(submittedUrl);
+        }
+
+        if (submittedUrl.match(/https?\:\/\/https?\:\/\//)) {
+            submittedUrl = submittedUrl.replace(/^https?\:\/\//, "");
             $("#url").val(submittedUrl);
         }
 
