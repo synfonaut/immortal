@@ -161,7 +161,7 @@ function renderText() {
 
 
 const tip_address = "16srSTytNdk11V8xBKYuJQFZKGThzN4GzU";
-const bitcom_protocol = "testing-19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut";
+const bitcom_protocol = "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut";
 
 $(function() {
     init();
@@ -192,22 +192,26 @@ $(function() {
         }, 500);
 
         $("#screenshot img").attr("src", "");
+        $("#screenshot #link").css("display", "none").attr("href", "");
         $("#screenshot").addClass("loading");
         $("#screenshot #confirm").css("display", "none");
         $("#success").css("display", "none");
         $("#error").css("display", "none");
 
+        const watermark = ($("#watermark:checked").val() == "on");
+
         $.ajax({
             method: "POST",
             url: "/scrape",
             contentType: "application/json",
-            data: JSON.stringify({ url: submittedUrl }),
+            data: JSON.stringify({ url: submittedUrl, watermark: watermark }),
         }).done(function( msg ) {
             $("#screenshot").removeClass("loading");
             $("#screenshot #confirm").css("display", "block");
 
             if (msg.status == "ok" && msg.screenshot) {
                 $("#screenshot img").attr("src", msg.screenshot);
+                $("#screenshot #link").css("display", "inline").attr("href", msg.screenshot);
 
                 var oReq = new XMLHttpRequest();
                 oReq.open("GET", msg.screenshot, true);

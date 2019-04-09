@@ -13,7 +13,7 @@ if (process.env.DEV) {
     endpoint = "http://localhost:3000";
 }
 
-async function getScreenshotForURL(url) {
+async function getScreenshotForURL(url, shouldWatermark=true) {
 
     const browser = await puppeteer.launch({
         ignoreHTTPSErrors: true
@@ -35,40 +35,52 @@ async function getScreenshotForURL(url) {
 
     await browser.close();
 
-    return Jimp.read(uploadPath)
-        .then(function (image) {
-            loadedImage = image;
-            return Jimp.loadFont(Jimp.FONT_SANS_16_WHITE);
-        })
-        .then(function (font) {
+    if (shouldWatermark) {
+        return Jimp.read(uploadPath)
+            .then(function (image) {
+                loadedImage = image;
+                return Jimp.loadFont(Jimp.FONT_SANS_16_WHITE);
+            })
+            .then(function (font) {
 
-            const paddingX = 10;
+                const paddingX = 10;
 
-            const text = "immortalsv.com " + url;
+                const text = "immortalsv.com " + url;
 
-            const width = Jimp.measureText(font, text);
-            const height = Jimp.measureTextHeight(font, text, width) * 0.95;
+                const width = Jimp.measureText(font, text);
+                const height = Jimp.measureTextHeight(font, text, width) * 0.95;
 
-            const overlay = new Jimp(width + (paddingX * 2), height, makeIteratorThatFillsWithColor(Jimp.cssColorToHex("#000000")));
-            overlay.scan(0, 0, width + (paddingX * 2), height, makeIteratorThatFillsWithColor(Jimp.cssColorToHex("#333")));
+                const overlay = new Jimp(width + (paddingX * 2), height, makeIteratorThatFillsWithColor(Jimp.cssColorToHex("#000000")));
+                overlay.scan(0, 0, width + (paddingX * 2), height, makeIteratorThatFillsWithColor(Jimp.cssColorToHex("#333")));
 
-            const watermark = overlay.print(font, paddingX, (height / 2) - 10, text)
-            const watermarkPath = "public/uploads/wm-" + fileName;
-            const watermarkDownloadPath = endpoint + "/uploads/wm-" + fileName;
+                const watermark = overlay.print(font, paddingX, (height / 2) - 10, text)
+                const watermarkPath = "public/uploads/wm-" + fileName;
+                const watermarkDownloadPath = endpoint + "/uploads/wm-" + fileName;
 
-            loadedImage.composite(watermark, 0, 768-height, {
-                mode: Jimp.BLEND_MULTIPLY,
-                opacitySource: 0.6,
-                opacityDest: 1,
-            }).write(watermarkPath);
+                loadedImage.composite(watermark, 0, 768-height, {
+                    mode: Jimp.BLEND_MULTIPLY,
+                    opacitySource: 0.6,
+                    opacityDest: 1,
+                }).write(watermarkPath);
 
-            return new Promise(resolve => {
-                resolve(watermarkDownloadPath);
+                return new Promise(resolve => {
+                    resolve(watermarkDownloadPath);
+                });
+            })
+            .catch(function (err) {
+                throw err;
             });
-        })
-        .catch(function (err) {
-            throw err;
+    } else {
+        const finalUploadPath = "public/uploads/uwm-" + fileName;
+        const finalDownloadPath = endpoint + "/uploads/uwm-" + fileName;
+        Jimp.read(uploadPath).then(image => {
+            image.write(finalUploadPath);
         });
+
+        return new Promise(resolve => {
+            resolve(finalDownloadPath);
+        });
+    }
 }
 
 module.exports = {

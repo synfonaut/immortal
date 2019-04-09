@@ -13,10 +13,11 @@ app.use(express.static('public'))
 app.post('/scrape', async (req, res, next) => {
 
     const url = req.body.url;
-    console.log("Fetching screenshot for " + url);
+    const watermark = req.body.watermark || false;
+    console.log("Fetching screenshot for " + url + " (watermark=" + watermark + ")");
 
     try {
-        var screenshot_url = await screenshot.getScreenshotForURL(url);
+        var screenshot_url = await screenshot.getScreenshotForURL(url, watermark);
         res.send({
             "status": "ok",
             "url": url,
