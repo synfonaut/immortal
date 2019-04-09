@@ -4,8 +4,10 @@ archive websites on bitcoin
 
 ## todo
 
-* twitter bot
+* add AUTHOR IDENTITY PROTOCOL
 * immortalsv.com/anywebsitehere.com
+* twitter bot
+* bottle bookmarklet
 * public faucet
 * change tip amount
 
