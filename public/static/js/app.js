@@ -175,7 +175,6 @@ $(function() {
 
         if (!submittedUrl) {
             $("#error").html("Enter a valid URL you want to snapshot to send to the blockchain").css("display", "block");
-            console.log("SUP");
             return;
         }
 

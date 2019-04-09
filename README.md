@@ -1,6 +1,7 @@
 # todo
 - want url on picture
 - advertise immortalsv.com
+- option to disable watermark
 
 ## colors
 

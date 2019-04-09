@@ -1,5 +1,12 @@
 const slugify = require('@sindresorhus/slugify');
 const puppeteer = require('puppeteer');
+var Jimp = require('jimp');
+
+function makeIteratorThatFillsWithColor(color) {
+    return function (x, y, offset) {
+        this.bitmap.data.writeUInt32BE(color, offset, true);
+    }
+};
 
 var endpoint = "https://immortalsv.com";
 if (process.env.DEV) {
@@ -9,8 +16,8 @@ if (process.env.DEV) {
 async function getScreenshotForURL(url) {
 
     const browser = await puppeteer.launch({
-       ignoreHTTPSErrors: true
-     });
+        ignoreHTTPSErrors: true
+    });
 
     const page = await browser.newPage();
     page.setViewport({
@@ -28,9 +35,40 @@ async function getScreenshotForURL(url) {
 
     await browser.close();
 
-    return new Promise(resolve => {
-        resolve(downloadPath);
-    });
+    return Jimp.read(uploadPath)
+        .then(function (image) {
+            loadedImage = image;
+            return Jimp.loadFont(Jimp.FONT_SANS_16_WHITE);
+        })
+        .then(function (font) {
+
+            const paddingX = 10;
+
+            const text = "immortalsv.com " + url;
+
+            const width = Jimp.measureText(font, text);
+            const height = Jimp.measureTextHeight(font, text, width) * 0.95;
+
+            const overlay = new Jimp(width + (paddingX * 2), height, makeIteratorThatFillsWithColor(Jimp.cssColorToHex("#000000")));
+            overlay.scan(0, 0, width + (paddingX * 2), height, makeIteratorThatFillsWithColor(Jimp.cssColorToHex("#333")));
+
+            const watermark = overlay.print(font, paddingX, (height / 2) - 10, text)
+            const watermarkPath = "public/uploads/wm-" + fileName;
+            const watermarkDownloadPath = endpoint + "/uploads/wm-" + fileName;
+
+            loadedImage.composite(watermark, 0, 768-height, {
+                mode: Jimp.BLEND_MULTIPLY,
+                opacitySource: 0.6,
+                opacityDest: 1,
+            }).write(watermarkPath);
+
+            return new Promise(resolve => {
+                resolve(watermarkDownloadPath);
+            });
+        })
+        .catch(function (err) {
+            throw err;
+        });
 }
 
 module.exports = {
