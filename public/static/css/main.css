@@ -235,6 +235,10 @@ a.inner-link:hover {
     width: 165px !important;
 }
 
+.money-button {
+    width: 125px !important;
+}
+
 .alert-success {
     background-color: #00BFF0ee;
     border-color: #00BFF0dd;
