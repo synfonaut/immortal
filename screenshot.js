@@ -27,7 +27,14 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
 
     page.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36");
 
-    await page.goto(url, {"waitUntil" : "networkidle0"});
+    page.goto(url);
+    await Promise.race([
+        page.waitForNavigation({waitUntil: 'load'}),
+        page.waitForNavigation({waitUntil: 'networkidle0'})
+    ]);
+
+    await page.waitFor(1500);
+
     const fileName = slugify(url + "-" + (new Date().getTime())) + ".jpg";
     const uploadPath = "public/uploads/" + fileName;
     const downloadPath = endpoint + "/uploads/" + fileName;
