@@ -82,6 +82,7 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
         const finalDownloadPath = endpoint + "/uploads/uwm-" + fileName;
         Jimp.read(uploadPath).then(image => {
             image.quality(90).resize(768, 576).write(finalUploadPath);
+            resolve(finalDownloadPath);
         });
     }
 }
