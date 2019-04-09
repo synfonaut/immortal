@@ -78,14 +78,8 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
                 throw err;
             });
     } else {
-        const finalUploadPath = "public/uploads/uwm-" + fileName;
-        const finalDownloadPath = endpoint + "/uploads/uwm-" + fileName;
-        Jimp.read(uploadPath).then(image => {
-            image.write(finalUploadPath);
-        });
-
         return new Promise(resolve => {
-            resolve(finalDownloadPath);
+            resolve(downloadPath);
         });
     }
 }
