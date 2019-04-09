@@ -245,7 +245,7 @@ $(function() {
 
                                 var viewURL = "https://bico.media/" + msg.txid;
 
-                                $("#success").html("Successfully immortalized " + submittedUrl + " to Bitcoin (BSV), see it <a href='" + viewURL+ "'>here</a>").css("display", "block");
+                                $("#success").html("Successfully immortalized " + submittedUrl + " to Bitcoin (BSV), see it <a href='" + viewURL+ "' target='_blank'>here</a>").css("display", "block");
                             }
                         }
                     });
