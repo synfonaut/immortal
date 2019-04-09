@@ -1,6 +1,5 @@
 *.pyc
 node_modules/
 .DS_Store
-public/uploads/*.png
 public/uploads/*.jpg
 package-lock.json
