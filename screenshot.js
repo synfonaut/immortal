@@ -38,7 +38,7 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
     const fileName = slugify(url + "-" + (new Date().getTime())) + ".jpg";
     const uploadPath = "public/uploads/" + fileName;
     const downloadPath = endpoint + "/uploads/" + fileName;
-    await page.screenshot({path: uploadPath, quality: 90});
+    await page.screenshot({path: uploadPath, quality: 70});
 
     await browser.close();
 
@@ -64,11 +64,11 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
                 const watermarkPath = "public/uploads/wm-" + fileName;
                 const watermarkDownloadPath = endpoint + "/uploads/wm-" + fileName;
 
-                loadedImage.quality(90).composite(watermark, 0, 768-height, {
+                loadedImage.quality(70).composite(watermark, 0, 768-height, {
                     mode: Jimp.BLEND_MULTIPLY,
                     opacitySource: 0.6,
                     opacityDest: 1,
-                }).quality(90).resize(768, 576).write(watermarkPath);
+                }).quality(70).resize(768, 576).write(watermarkPath);
 
                 return new Promise(resolve => {
                     resolve(watermarkDownloadPath);
@@ -81,7 +81,7 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
         const finalUploadPath = "public/uploads/uwm-" + fileName;
         const finalDownloadPath = endpoint + "/uploads/uwm-" + fileName;
         Jimp.read(uploadPath).then(image => {
-            image.quality(90).resize(768, 576).write(finalUploadPath);
+            image.quality(70).resize(768, 576).write(finalUploadPath);
             resolve(finalDownloadPath);
         });
     }
