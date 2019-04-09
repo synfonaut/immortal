@@ -22,7 +22,6 @@ var databutton = {
             if (typeof item === 'function') { d[index] = item() }
             else if (item === null) { d[index] = "" }
           })
-            console.log(d);
           datapay.build({ "data": d }, function(err, tx) {
             var s = tx.outputs[0]._script.toASM();
             o.button.outputs = [{ script: s, amount: 0, currency: 'BSV' }];
@@ -39,7 +38,6 @@ var databutton = {
         reader.readAsArrayBuffer(e.target.files[0]);
       }
     } else if (o.data) {
-        console.log(o.data);
       datapay.build({ "data": o.data }, function(err, tx) {
         var s = tx.outputs[0]._script.toASM();
         var el = o.button.$el;

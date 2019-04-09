@@ -38,7 +38,7 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
     const fileName = slugify(url + "-" + (new Date().getTime())) + ".jpg";
     const uploadPath = "public/uploads/" + fileName;
     const downloadPath = endpoint + "/uploads/" + fileName;
-    await page.screenshot({path: uploadPath, quality: 85});
+    await page.screenshot({path: uploadPath, quality: 90});
 
     await browser.close();
 
@@ -57,18 +57,18 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
                 const width = Jimp.measureText(font, text);
                 const height = Jimp.measureTextHeight(font, text, width) * 0.95;
 
-                const overlay = new Jimp(width + (paddingX * 2), height, makeIteratorThatFillsWithColor(Jimp.cssColorToHex("#000000")));
+                const overlay = new Jimp(width + (paddingX * 2), height, makeIteratorThatFillsWithColor(Jimp.cssColorToHex("#000000"))).quality(70);
                 overlay.scan(0, 0, width + (paddingX * 2), height, makeIteratorThatFillsWithColor(Jimp.cssColorToHex("#333")));
 
                 const watermark = overlay.print(font, paddingX, (height / 2) - 10, text)
                 const watermarkPath = "public/uploads/wm-" + fileName;
                 const watermarkDownloadPath = endpoint + "/uploads/wm-" + fileName;
 
-                loadedImage.composite(watermark, 0, 768-height, {
+                loadedImage.quality(90).composite(watermark, 0, 768-height, {
                     mode: Jimp.BLEND_MULTIPLY,
                     opacitySource: 0.6,
                     opacityDest: 1,
-                }).write(watermarkPath);
+                }).quality(90).resize(768, 576).write(watermarkPath);
 
                 return new Promise(resolve => {
                     resolve(watermarkDownloadPath);
@@ -78,8 +78,10 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
                 throw err;
             });
     } else {
-        return new Promise(resolve => {
-            resolve(downloadPath);
+        const finalUploadPath = "public/uploads/uwm-" + fileName;
+        const finalDownloadPath = endpoint + "/uploads/uwm-" + fileName;
+        Jimp.read(uploadPath).then(image => {
+            image.quality(90).resize(768, 576).write(finalUploadPath);
         });
     }
 }
