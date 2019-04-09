@@ -80,7 +80,7 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
     } else {
         const finalUploadPath = "public/uploads/uwm-" + fileName;
         const finalDownloadPath = endpoint + "/uploads/uwm-" + fileName;
-        Jimp.read(uploadPath).then(image => {
+        return Jimp.read(uploadPath).then(image => {
             image.quality(70).resize(768, 576).write(finalUploadPath);
             return new Promise(resolve => {
                 resolve(finalDownloadPath);
