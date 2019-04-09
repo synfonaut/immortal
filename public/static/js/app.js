@@ -162,6 +162,8 @@ function renderText() {
 
 const tip_address = "16srSTytNdk11V8xBKYuJQFZKGThzN4GzU";
 const bitcom_protocol = "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut";
+const map_protocol = "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5";
+const immortal_protocol = "1NvmQsnpinHTf7KinvHmqLCM8hcaYaFbg4";
 
 $(function() {
     init();
@@ -231,6 +233,13 @@ $(function() {
                             blob,
                             msg.mimeType,
                             "binary",
+                            submittedUrl,
+                            "|",
+                            map_protocol,
+                            "SET",
+                            "app",
+                            "immortalsv",
+                            "url",
                             submittedUrl,
                         ],
                         button: {
