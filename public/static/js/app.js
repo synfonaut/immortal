@@ -235,21 +235,23 @@ $(function() {
                 oReq.onload = function(oEvent) {
                     var blob = oReq.response;
 
+                    const data = [
+                        bitcom_protocol,
+                        blob,
+                        msg.mimeType,
+                        "binary",
+                        submittedUrl,
+                        "|",
+                        map_protocol,
+                        "SET",
+                        "url",
+                        submittedUrl,
+                    ];
+
+                    const signedData = data;
+
                     databutton.build({
-                        data: [
-                            bitcom_protocol,
-                            blob,
-                            msg.mimeType,
-                            "binary",
-                            submittedUrl,
-                            "|",
-                            map_protocol,
-                            "SET",
-                            "app",
-                            "immortalsv",
-                            "url",
-                            submittedUrl,
-                        ],
+                        data: signedData,
                         button: {
                             $el: "#money-button",
                             label: "Immortalize",
