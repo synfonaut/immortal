@@ -227,12 +227,6 @@ $(function() {
                 $("#screenshot #link").css("display", "inline").attr("href", msg.screenshot);
 
                 var data = msg.data;
-                console.log(data);
-
-                const base64image = data[1];
-                const binaryImage = _base64ToArrayBuffer(base64image);
-                data[1] = binaryImage;
-                console.log(data);
 
                 databutton.build({
                     data: data,

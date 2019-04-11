@@ -2,6 +2,25 @@ const express = require('express')
 const fs = require("fs");
 
 const screenshot = require('./screenshot')
+const bitcoinfiles =  require('bitcoinfiles-sdk');
+const bsv =  require('bsv');
+
+
+function sign_opreturn(args, private_key) {
+
+    const identityPrivateKey = new bsv.PrivateKey(private_key);
+    const identityAddress = identityPrivateKey.toAddress().toString();
+
+    args.push('0x' + Buffer.from('|').toString('hex'));
+
+    const arr = bitcoinfiles.buildAuthorIdentity({
+        args: args,
+        address: identityAddress,
+        key: private_key
+    });
+
+    return args.concat(arr);
+}
 
 const app = express()
 const port = 3000
@@ -34,31 +53,48 @@ app.post('/scrape', async (req, res, next) => {
         }
 
         fs.readFile(screenshot_path, (err, file) => {
-            if (err) { throw err; }
+            if (err) { console.log(err); throw err; }
 
             const data = [
-                bitcom_protocol,
-                Buffer.from(file).toString("base64"),
-                "image/jpeg",
-                "binary",
-                url,
-                "|",
-                map_protocol,
-                "SET",
-                "url",
-                url,
+                "0x" + Buffer.from(bitcom_protocol).toString("hex"),
+                "0x" + Buffer.from(file).toString("hex"),
+                "0x" + Buffer.from("image/jpeg").toString("hex"),
+                "0x" + Buffer.from("binary").toString("hex"),
+                "0x" + Buffer.from(url).toString("hex"),
+                "0x" + Buffer.from("|").toString("hex"),
+                "0x" + Buffer.from(map_protocol).toString("hex"),
+                "0x" + Buffer.from("SET").toString("hex"),
+                "0x" + Buffer.from("url").toString("hex"),
+                "0x" + Buffer.from(url).toString("hex"),
             ];
 
-            res.send({
-                "status": "ok",
-                "url": url,
-                "mimeType": "image/jpeg",
-                "screenshot": screenshot_url,
-                "data": data
-            });
+            console.log(data);
+
+            const signed_data = sign_opreturn(data, process.env.PRIVATE_KEY);
+            console.log(signed_data);
+
+            (async () => {
+                const verification = await bitcoinfiles.verifyAuthorIdentity(signed_data, [immortal_protocol]);
+
+                if (!verification.verified) {
+                    console.log(verification);
+
+                    res.send({"status": "err"});
+                    return;
+                }
+
+                res.send({
+                    "status": "ok",
+                    "url": url,
+                    "mimeType": "image/jpeg",
+                    "screenshot": screenshot_url,
+                    "data": signed_data 
+                });
+            })();
         });
 
     } catch (e) {
+        throw e;
         console.log("ERROR: " + e);
         res.send({
             "status": "err",
