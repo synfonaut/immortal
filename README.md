@@ -4,7 +4,6 @@ archive websites on bitcoin
 
 ## todo
 
-* add AUTHOR IDENTITY PROTOCOL
 * bottle bookmarklet
 * public faucet
 * list recent websites archived
@@ -15,6 +14,7 @@ archive websites on bitcoin
 * twitter bot
 * fix bug with very long urls
 * advanced option to change viewport size to capture more of page
+* image optimization algorithm (generate multiple, pick smallest)
 
 * add rotating tips
  - quickly capture a website with immortalsv.com/domain.com
