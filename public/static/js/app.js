@@ -15,7 +15,6 @@ var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 function init() {
-
     container = document.getElementById("particles");
 
     camera = new THREE.PerspectiveCamera(120, window.innerWidth / window.innerHeight, 1, 10000);
@@ -27,41 +26,27 @@ function init() {
 
     var PI2 = Math.PI * 2;
     var material = new THREE.ParticleCanvasMaterial({
-
         color: 0xe1e1e1,
         program: function(context) {
-
             context.beginPath();
             context.arc(0, 0, .6, 0, PI2, true);
             context.fill();
-
         }
-
     });
 
     var i = 0;
-
     for (var ix = 0; ix < AMOUNTX; ix++) {
-
         for (var iy = 0; iy < AMOUNTY; iy++) {
-
             particle = particles[i++] = new THREE.Particle(material);
             particle.position.x = ix * SEPARATION - ((AMOUNTX * SEPARATION) / 2);
             particle.position.z = iy * SEPARATION - ((AMOUNTY * SEPARATION) / 2);
             scene.add(particle);
-
         }
-
     }
 
     renderer = new THREE.CanvasRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
-
-    //document.addEventListener('mousemove', onDocumentMouseMove, false);
-    //document.addEventListener('touchstart', onDocumentTouchStart, false);
-    //document.addEventListener('touchmove', onDocumentTouchMove, false);
-    //window.addEventListener('resize', onWindowResize, false);
 }
 
 //
@@ -160,6 +145,18 @@ function renderText() {
 }
 
 
+// https://stackoverflow.com/questions/21797299/convert-base64-string-to-arraybuffer
+function _base64ToArrayBuffer(base64) {
+    var binary_string =  window.atob(base64);
+    var len = binary_string.length;
+    var bytes = new Uint8Array( len );
+    for (var i = 0; i < len; i++)        {
+        bytes[i] = binary_string.charCodeAt(i);
+    }
+    return bytes.buffer;
+}
+
+
 const tip_address = "16srSTytNdk11V8xBKYuJQFZKGThzN4GzU";
 const bitcom_protocol = "19HxigV4QyBv3tHpQVcUEQyq1pzZVdoAut";
 const map_protocol = "1PuQa7K62MiKCtssSLKy1kh56WWU7MtUR5";
@@ -224,58 +221,42 @@ $(function() {
             $("#screenshot").removeClass("loading");
             $("#screenshot #confirm").css("display", "block");
 
-            if (msg.status == "ok" && msg.screenshot) {
+            if (msg.status == "ok" && msg.screenshot && msg.data) {
+
                 $("#screenshot img").attr("src", msg.screenshot);
                 $("#screenshot #link").css("display", "inline").attr("href", msg.screenshot);
 
-                var oReq = new XMLHttpRequest();
-                oReq.open("GET", msg.screenshot, true);
-                oReq.responseType = "arraybuffer";
+                var data = msg.data;
+                console.log(data);
 
-                oReq.onload = function(oEvent) {
-                    var blob = oReq.response;
+                const base64image = data[1];
+                const binaryImage = _base64ToArrayBuffer(base64image);
+                data[1] = binaryImage;
+                console.log(data);
 
-                    const data = [
-                        bitcom_protocol,
-                        blob,
-                        msg.mimeType,
-                        "binary",
-                        submittedUrl,
-                        "|",
-                        map_protocol,
-                        "SET",
-                        "url",
-                        submittedUrl,
-                    ];
+                databutton.build({
+                    data: data,
+                    button: {
+                        $el: "#money-button",
+                        label: "Immortalize",
+                        $pay: {
+                            to: [{
+                                address: tip_address,
+                                value: 50000,
+                            }]
+                        },
+                        onPayment: function(msg) {
+                            console.log(msg);
+                            console.log("https://bico.media/" + msg.txid);
+                            console.log("https://www.bitpaste.app/tx/" + msg.txid);
+                            console.log("https://www.bitcoinfiles.org/" + msg.txid);
 
-                    const signedData = data;
+                            var viewURL = "https://bico.media/" + msg.txid;
 
-                    databutton.build({
-                        data: signedData,
-                        button: {
-                            $el: "#money-button",
-                            label: "Immortalize",
-                            $pay: {
-                                to: [{
-                                    address: tip_address,
-                                    value: 50000,
-                                }]
-                            },
-                            onPayment: function(msg) {
-                                console.log(msg);
-                                console.log("https://bico.media/" + msg.txid);
-                                console.log("https://www.bitpaste.app/tx/" + msg.txid);
-                                console.log("https://www.bitcoinfiles.org/" + msg.txid);
-
-                                var viewURL = "https://bico.media/" + msg.txid;
-
-                                $("#success").html("Successfully immortalized " + submittedUrl + " to Bitcoin (BSV), see it <a href='" + viewURL+ "' target='_blank'>here</a>").css("display", "block");
-                            }
+                            $("#success").html("Successfully immortalized " + submittedUrl + " to Bitcoin (BSV), see it <a href='" + viewURL+ "' target='_blank'>here</a>").css("display", "block");
                         }
-                    });
-                };
-
-                oReq.send();
+                    }
+                });
             } else {
                 $("#error").html("Error while fetching website, please try again or contact synfonaut").css("display", "block");
             }

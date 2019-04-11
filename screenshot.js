@@ -71,7 +71,10 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
                 }).quality(70).resize(768, 576).write(watermarkPath);
 
                 return new Promise(resolve => {
-                    resolve(watermarkDownloadPath);
+                    resolve({
+                        "screenshot_url": watermarkDownloadPath,
+                        "screenshot_path": watermarkPath,
+                    });
                 });
             })
             .catch(function (err) {
