@@ -53,7 +53,7 @@ app.post('/scrape', async (req, res, next) => {
         }
 
         fs.readFile(screenshot_path, (err, file) => {
-            if (err) { console.log(err); throw err; }
+            if (err) { throw err; }
 
             const data = [
                 "0x" + Buffer.from(bitcom_protocol).toString("hex"),
@@ -68,17 +68,13 @@ app.post('/scrape', async (req, res, next) => {
                 "0x" + Buffer.from(url).toString("hex"),
             ];
 
-            console.log(data);
-
             const signed_data = sign_opreturn(data, process.env.PRIVATE_KEY);
-            console.log(signed_data);
 
             (async () => {
                 const verification = await bitcoinfiles.verifyAuthorIdentity(signed_data, [immortal_protocol]);
 
                 if (!verification.verified) {
                     console.log(verification);
-
                     res.send({"status": "err"});
                     return;
                 }
@@ -94,7 +90,6 @@ app.post('/scrape', async (req, res, next) => {
         });
 
     } catch (e) {
-        throw e;
         console.log("ERROR: " + e);
         res.send({
             "status": "err",
