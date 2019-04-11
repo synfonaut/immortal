@@ -86,7 +86,10 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
         return Jimp.read(uploadPath).then(image => {
             image.quality(70).resize(768, 576).write(finalUploadPath);
             return new Promise(resolve => {
-                resolve(finalDownloadPath);
+                resolve({
+                    "screenshot_url": finalDownloadPath,
+                    "screenshot_path": finalUploadPath,
+                });
             });
         });
     }
