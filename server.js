@@ -53,7 +53,11 @@ app.post('/scrape', async (req, res, next) => {
         }
 
         fs.readFile(screenshot_path, (err, file) => {
-            if (err) { throw err; }
+            if (err) {
+                console.log("Error while reading file " + file);
+                res.send({"status": "err"});
+                return;
+            }
 
             const data = [
                 "0x" + Buffer.from(bitcom_protocol).toString("hex"),
