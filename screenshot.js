@@ -78,7 +78,10 @@ async function getScreenshotForURL(url, shouldWatermark=true) {
                 });
             })
             .catch(function (err) {
-                throw err;
+                console.log("Error while watermarking");
+                return new Promise(resolve => {
+                    resolve(null);
+                });
             });
     } else {
         const finalUploadPath = "public/uploads/uwm-" + fileName;
