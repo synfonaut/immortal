@@ -15,6 +15,8 @@ archive websites on bitcoin
 * fix bug with very long urls
 * advanced option to change viewport size to capture more of page
 * image optimization algorithm (generate multiple, pick smallest)
+* full screen option
+* crop option
 
 * add rotating tips
  - quickly capture a website with immortalsv.com/domain.com
