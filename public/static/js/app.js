@@ -229,6 +229,7 @@ $(function() {
                 var data = msg.data;
 
                 databutton.build({
+                    safe: true,
                     data: data,
                     button: {
                         $el: "#money-button",
